@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "Here We Go..."
-date:       2019-10-08 16:33:24 +0000
+date:       2019-10-08 12:33:25 -0400
 permalink:  here_we_go
 ---
 
@@ -17,7 +17,13 @@ Transferred to USF to complete my BA in Finance. Due to extenuating circumstance
 Worked a string of jobs, not making enough money and draining myself both physically and mentally. I kept hearing about the tech industry. About coding. Data Science. Web Development. I read up on it and wanted to learn more. I didn't want to give up my job. I didn't think it was feasible. I kept thinking, ***"Should i do it?"*** and kept teeter-tottering.
 
 > SO MANY OF US STRUGGLE WITH MAKING A DECISION BETWEEN TWO CHOICES. WE DON'T KNOW WHICH WAY TO GO IN FEAR OF NEVER KNOWING WHAT MIGHT OF HAPPEN IF WE CHOSE THE OTHER OPTION. IT'S TIME TO STOP LETTING THAT FEAR CONTROL YOU.
-> @GaryVee GaryVaynerchuck
+> 
+> @GaryVee 
+> -Gary Vaynerchuck
+
+![](https://leadershipfreak.files.wordpress.com/2014/08/jump.jpg)
+
+**I made the decision.**
 
 
 

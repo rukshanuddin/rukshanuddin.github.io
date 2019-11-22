@@ -1,12 +1,12 @@
 ---
 layout: post
 title:      "Object Architecture in Ruby"
-date:       2019-11-22 04:37:59 +0000
+date:       2019-11-21 23:38:00 -0500
 permalink:  object_architecture_in_ruby
 ---
 
 ## Inheritance, Supers and Modules
-
+[Final Version on Medium](https://medium.com/@rukshan.uddin/object-architecture-in-ruby-explained-3d52e66f9b03?sk=3b215564a7865d9acfab22e5ac786df9)
 Everything in Ruby is an object. As everything is an object, there are basic rules that every object will follow. All objects can inherit from another object. All objects can modify methods that are inherited 
 
 ### Inheritance

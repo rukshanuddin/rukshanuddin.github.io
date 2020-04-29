@@ -1,0 +1,248 @@
+---
+layout: post
+title:      "Go, fetch()"
+date:       2020-04-29 05:27:16 +0000
+permalink:  go_fetch
+---
+
+
+## Using Fetch in Javascript
+
+Working on my Javascript portfolio project gave me a chance to get familiarized with fetch requests. We had to use fetch to send requests to our Rails backend. Fetch ended up being wholly responsible for manipulating our API, we no longer had to submit forms and wait for new pages to pop up, Javascript took care of all of that for us. We were able to use fetch requests to GET, POST, DELETE, PATCH and UPDATE our database. Doing so, we saved time, not relying on having to write views for all our models and being able to manipulate the information stored within better.
+
+## The different requests
+
+As we wrote our code, I found myself relying on several different resources to put together my requests. Since it was a major part of the Javascript project, I decided to write a brief summary of the different requests available and how to use them.
+
+## Fetch - Basic GET request
+
+Our basic fetch request will look something like this(I used fetch to get my users from my database):
+
+```javascript
+fetch("http://localhost:3000")
+```
+
+The first thing that happens is that fetch will take the URL you pass in to it and retrieve a *promise* object. So when we send our request, we are getting a *promise*, which we must then take that response and turn it into **JSON** for our use.
+
+```javascript
+fetch("http://localhost:3000")
+    .then(resp => resp.json())
+```
+
+Once we have that **JSON** we can *then* manipulate it further.
+
+```javascript
+fetch("http://localhost:3000")
+    .then(resp => resp.json())
+    .then(users => users.pop())
+```
+
+In the example above I took the *promise* I received, turned that to **JSON** then I had an array of **JSON** objects. For my project, I only needed the last user that had signed on, so I use ```users.pop()``` to remove and return the last element of the **JSON** array I received.  
+*A thing to note is that, although I am using ```.pop()`` it isn't actually affecting my database. It is only removing the last item from  the ***JSON*** object that is created from the promise returned by our fetch request.*
+
+```javascript
+fetch("http://localhost:3000/users")
+    .then(resp => resp.json())
+    .then(users => users.pop())
+    .then(user => renderUser(user))
+};
+```
+
+Now when it comes to rendering on my page. I must process the response further. In this example I have taken the **JSON** object that I got as a return value from calling ```.pop()``` in the previous example and called ```renderUser()``` on it. This is necessary because otherwise, we will have only been left with **JSON** that we had done nothing with. The method I have use will take that **JSON** and put render it in a way that can be used on the screen.  
+
+## Fetch - POST
+
+Since we want everything in our projects running on one page without redirects, instead of having **Rails** handle our forms, we can use Javascript. When we use Javascript to handle a **POST** request on our forms, there are a few key things to remember.
+
+### Event Listener
+
+Since we are changing what our form will usually do, we will add an event listener to our from to prevent the default action of the form.
+
+```javascript
+const userForm = document.querySelector("body > header > div > div > div.menu > div.user-form > form")
+
+userForm.addEventListener('submit', ...)
+```
+
+In my example, I have defined my ```userForm``` variable and added ```.addEventListener('submit', ...)``` to listen for the submit event.
+
+```javascript
+userForm.addEventListener('submit', event => {
+    event.preventDefault()
+    postUser(event.target)
+})
+```
+
+When it 'hears' the submit event it will do two things. The main thing that will tend to be the same across the board is calling ```.preventDefault()```, which will prevent the form from performing its default submission.  
+The next thing I do is pass the ```event.target``` to my fetch **POST** method, aptly named ```postUser```, I have defined elsewhere.
+
+### POST method
+
+```javascript
+function postUser(user_data) {
+
+}
+```
+
+I have defined ```postUser()``` to handle my form **POST** request. I pass in my forms data and with that data, I submit my user data to my backend, using a fetch request.
+
+```javascript
+function postUser(user_data) {
+
+    fetch('http://localhost:3000/users', {
+            method: 'POST',
+}
+```
+
+The first thing I want to do is type out my ```fetch()```. I pass in my url and let Javascript know that it is a POST request.
+
+```javascript
+function postUser(user_data) {
+
+    fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                "name": user_data.name.value,
+                "user_handle": user_data.handle.value
+            })
+        })
+}
+```
+
+Then I put in the headers letting my application know that I will be dealing with **JSON** and in the ```body:``` I use ```JSON.stringify()``` to turn my JS object to **JSON**. The two attribute that my users have are a "name" and "user_handle" and inside my ```JSON.stringify()``` I take my form data (```user_data```) and pull the values from the respective fields to assign them to the user (```user_data.name.value``` & ```user_data.handle.value```)
+
+```javascript
+function postUser(user_data) {
+
+    fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                "name": user_data.name.value,
+                "user_handle": user_data.handle.value
+            })
+        })
+        .then(res => res.json())
+}
+```
+
+The next step would be to take the response received and turn it back into a **JSON** object to manipulate...
+
+```javascript
+function postUser(user_data) {
+
+    fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                "name": user_data.name.value,
+                "user_handle": user_data.handle.value
+            })
+        })
+        .then(res => res.json())
+        .then((obj_user) => {
+            renderUser(obj_user)
+        })
+}
+```
+
+With this **JSON** I then use it to render my User using ```renderUser()``` which I have defined elsewhere.
+
+```javascript
+function postUser(user_data) {
+
+    fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                "name": user_data.name.value,
+                "user_handle": user_data.handle.value
+            })
+        })
+        .then(res => res.json())
+        .then((obj_user) => {
+            let new_user = renderUser(obj_user)
+            const welcome = document.querySelector("body > header > div > div > div:nth-child(3) > div")
+        })
+        .catch((err) => {
+            alert(err.message)
+        })
+}
+```
+
+Lastly, I added a ```.catch()``` to handle any errors that come up in the previous steps.
+
+## Fetch DELETE
+
+I added a button to delete "handles" from my application. Now, since we want to keep everything on one page (no redirects), I utilized a fetch request to **DELETE** "handles" from my database.
+
+### Event Listener
+
+The first step I took was to add a listener to the delete button I had created.
+
+```javascript
+handlesContainer.addEventListener('click', (e) => {
+    if(e.target.innerText === "Delete Handle") {
+            deleteHandle(e.target.id)
+        } else if {...}
+    }
+);
+```
+
+I had an event listener, listening for events on my ```handlesContainer``` I handled multiple click events in this listener, but I am only going to focus on the one handling my **DELETE**. I let my listener, listen for a 'click' event on the entire container, so it could handle deleting any of the handles available within, I set the id of each of the buttons to the handles id, so when we call ```deleteHandle()``` we pass in ```e.target.id``` to be able to delete the proper handle.
+
+### The fetch function
+
+```javascript
+function deleteHandle(handleId) {
+    fetch(`http://localhost:3000/handles/${handleId}`, {
+        method: 'DELETE'
+    })
+}
+```
+
+I defined my ```deleteHandle()``` method to take an id, we interpolate that number into the ```fetch()``` request's URL to handle the exact handle we want. We enter ```'DELETE'``` to let our ```fetch()``` know we what ```method:``` we are using.
+
+```javascript
+function deleteHandle(handleId) {
+    fetch(`http://localhost:3000/handles/${handleId}`, {
+        method: 'delete'
+    }).then(response =>
+        response.json()
+      .then(json => {
+            return json;
+        })
+}
+```
+
+After we ```DELETE``` our handle, we take the response we receive and turn it back to **JSON**.
+
+```javascript
+function deleteHandle(handleId) {
+    fetch(`http://localhost:3000/handles/${handleId}`, {
+        method: 'delete'
+    }).then(response =>
+        response.json()
+      .then(json => {
+            return json;
+        })
+      .then(clearHandles())
+      .then(fetchHandles())
+    );
+}
+```
+
+After this, I take call ```clearHandles()``` to clear old handle data and ```fetchHandles()``` again to receive and updated list.
